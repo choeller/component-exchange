@@ -63,15 +63,14 @@ export class PaginatedListComponent extends AbstractList implements OnChanges, A
     if (this.customListComponent) {
       this.customListComponentRef = this.portalHost.attach(this.customListComponent);
 
-      this.attachOutputBindings();
+      this.attachOutputBindings(['entrySelected']);
 
       this.refreshCustomListBindings();
     }
   }
 
-  private attachOutputBindings() {
-    const outputBindings = (Object.keys(((this.customListComponent.component) as any).ngBaseDef.outputs));
-    outputBindings.forEach(outputBinding => {
+  private attachOutputBindings(bindings: string[]) {
+    bindings.forEach(outputBinding => {
       this.customListComponentRef.instance[outputBinding].subscribe(value => {
         this[outputBinding].emit(value);
       });
@@ -87,7 +86,6 @@ export class PaginatedListComponent extends AbstractList implements OnChanges, A
       this.injector,
     );
 
-    // Attach portal to host
     setTimeout(() => {
       this.attachCustomListComponent();
     });
